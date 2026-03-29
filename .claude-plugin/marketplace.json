@@ -1,0 +1,18 @@
+{
+  "name": "ajilk-skills",
+  "owner": {
+    "name": "ajilk"
+  },
+  "metadata": {
+    "description": "A curated marketplace of Claude Code skills and plugins.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "workflow",
+      "source": "./plugins/workflow",
+      "description": "Developer workflow tools — commit helpers, structured summaries, and more.",
+      "version": "0.1.0"
+    }
+  ]
+}
