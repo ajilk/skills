@@ -15,14 +15,14 @@ local numstat=$(git diff --staged --numstat)
 typeset -A stats vlens
 while IFS=$'\t' read -r a d f; do
   local s="" v=0
-  [[ "$a" != "0" && "$a" != "-" ]] && s="${grn}+${a}${rst}" && v=$(( v + ${#a} + 1 ))
+  [[ "$a" != "0" && "$a" != "-" ]] && s="${grn}+${a}${rst}" && v=$((v + ${#a} + 1))
   if [[ "$d" != "0" && "$d" != "-" ]]; then
-    [[ -n "$s" ]] && s="${s} ${dim}/${rst} " && v=$(( v + 3 ))
-    s="${s}${red}-${d}${rst}" && v=$(( v + ${#d} + 1 ))
+    [[ -n "$s" ]] && s="${s} ${dim}/${rst} " && v=$((v + 3))
+    s="${s}${red}-${d}${rst}" && v=$((v + ${#d} + 1))
   fi
   stats[$f]="$s"
   vlens[$f]="$v"
-done <<< "$numstat"
+done <<<"$numstat"
 
 # Mirror paths in temp dir, run tree
 local tmpdir=$(mktemp -d)
@@ -40,22 +40,24 @@ local -a rows keys
 local max_w=0 raw rel key base row
 
 while IFS= read -r line; do
-  raw="${line##*── }"; raw="${raw##*─ }"
+  raw="${line##*── }"
+  raw="${raw##*─ }"
   rel="${raw#${tmpdir}/}"
   key=""
   [[ -n "${stats[$rel]:-}" ]] && key="$rel"
   base="${rel:t}"
   [[ "$line" == *"── "* ]] && row="${line%%── *}── ${base}" || row="$line"
-  rows+=("$row"); keys+=("$key")
-  (( ${#row} > max_w )) && max_w=${#row}
-done <<< "$tree"
+  rows+=("$row")
+  keys+=("$key")
+  ((${#row} > max_w)) && max_w=${#row}
+done <<<"$tree"
 
 # Second pass: render with right-aligned stats
 print ""
-for (( i=1; i<=${#rows}; i++ )); do
+for ((i = 1; i <= ${#rows}; i++)); do
   if [[ -n "${keys[$i]}" ]]; then
     local k="${keys[$i]}"
-    local dw=$(( max_w - ${#rows[$i]} + 12 - vlens[$k] ))
+    local dw=$((max_w - ${#rows[$i]} + 12 - vlens[$k]))
     local dots=$(printf '%*s' $dw '' | tr ' ' '·')
     local pfx="${rows[$i]%%── *}── "
     local name="${rows[$i]#*── }"
