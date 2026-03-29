@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" == *.sh ]] || [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" == *.zsh ]]; then shfmt -i 2 -w \"$CLAUDE_TOOL_INPUT_FILE_PATH\"; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
